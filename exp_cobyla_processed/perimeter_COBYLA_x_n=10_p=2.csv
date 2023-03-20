@@ -1,2 +1,0 @@
-,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
-0,10,2,COBYLA,862.8,169.16054176104097,2.5930999999999997,0.5101876452182406,0.9778,0.07020256405573802,9
