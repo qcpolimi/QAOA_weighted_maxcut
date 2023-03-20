@@ -4,4 +4,3 @@
 /exp_powell/**
 /__pycache__/**
 .*
-!/.gitignore
