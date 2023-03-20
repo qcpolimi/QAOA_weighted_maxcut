@@ -1,3 +1,5 @@
+/exp_cobyla_processed/**
+/exp_powell_processed/**
 /exp_cobyla/**
 /exp_powell/**
 /__pycache__/**
