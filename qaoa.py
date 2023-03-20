@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 import qiskit
-# from qiskit.circuit.library import XXPlusYYGate
+#from qiskit.circuit.library import XXPlusYYGate  # NOT WORKING ON GPU
 from qiskit import Aer, QuantumCircuit
 from qiskit.algorithms.optimizers import ADAM, CG, COBYLA, L_BFGS_B, SLSQP, TNC, BOBYQA, IMFIL, GSLS, NELDER_MEAD, NFT, POWELL, SPSA, CRS, DIRECT_L, DIRECT_L_RAND, ESCH, ISRES, QNSPSA
 
@@ -68,10 +68,9 @@ class QAOA():
         elif self.mixer == 'xy':
             for i in range(self.n_qubs):
                 for j in range(i+1,self.n_qubs):
-                    qc_mixer.rxx(2*beta, i, j)
-                    qc_mixer.ryy(2*beta, i, j)
-            qc_mixer.rxx(2*beta, j, 0)
-            qc_mixer.ryy(2*beta, j, 0) 
+                    if self.Q[i,j] != 0:
+                        qc_mixer.rxx(2*beta, i, j)
+                        qc_mixer.ryy(2*beta, i, j)
         return qc_mixer
 
     
@@ -212,7 +211,7 @@ class QAOA():
                            x0 = initial_params,
                            bounds = bounds)
         end = time()
-        opt_time = end-start
+        opt_time = np.round(end-start,3)
         
         if self.opt_iterations > 998:
             print(f"[WARNING] OPTIMIZATION TERMINATED DUE TO MAX_ITER: {self.opt_iterations}")
@@ -248,7 +247,7 @@ class QAOA():
 
 
     def save_final_df(self, folder, g, optimizer, n, p, experiments, mixer):
-        filename = folder + g + '_' + optimizer + '_' + mixer + '_n=' + str(n) + '_p=' + str(p) + '_exp=' + str(experiments) + '.csv'
+        filename = folder + g + '_' + optimizer + '_' + mixer + '_n=' + str(n) + '_p=' + str(p) + '.csv' #'_exp=' + str(experiments) + '.csv'
         self.final_df.to_csv(filename)
     
     

@@ -2,8 +2,10 @@ from graph import fully_connected, erdos_renyi, barabasi_albert, perimeter, star
 from qaoa import QAOA
 
 if __name__ == "__main__":
+
+    folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/exp_opt/'
     
-    for n in range(4,19): 
+    for n in range(14,15):#,2): 
         g = 'perimeter'
         
         if g == 'perimeter':
@@ -28,7 +30,7 @@ if __name__ == "__main__":
         test_opt = [
                     # 'ADAM', 
                     # 'CG', 
-                    'COBYLA', 
+                    # 'COBYLA', 
                     # 'L_BFGS_B', 
                     # 'SLSQP', 
                     # 'TNC', 
@@ -37,31 +39,33 @@ if __name__ == "__main__":
                     # 'NFT', 
                     # 'POWELL',
                     # 'SPSA',
-                    # 'BOBYQA',
-                    # 'IMFIL',
-                    # 'CRS',
-                    # 'DIRECT_L',
-                    # 'DIRECT_L_RAND',
-                    # 'ESCH',
-                    # 'ISRES'
+                    'BOBYQA',
+                    'IMFIL',
+                    'CRS',
+                    'DIRECT_L',
+                    'DIRECT_L_RAND',
+                    'ESCH',
+                    'ISRES'
                     ]
-        p_max = 3
-        experiments = 10
-        mixer = 'x'
         
-        folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/exp/'
-        for p in range(1, p_max):
-            print(f'p={p}')
-            for optimizer in test_opt:
-                print(f'\toptimizer={test_opt}')
-                for _ in range(experiments):
-                    print(f'\t\texp={_}')
-                    a.run_qaoa(mixer = mixer,
-                               optimizer = optimizer, 
-                               p = p,
-                               GPU = False)
-                    # a.run_qaoa(optimizer=CG(maxiter=1000, tol=1e-03, eps=1e-03),
-                    #             p=p)
+        test_mix = ['x']#, 'r', 'xy']
+        
+        p_max = 2
+        experiments = 10
+        
+
+        for optimizer in test_opt:
+            print(f'optimizer={optimizer}')
+            for mixer in test_mix:
+                print(f'\tmixer={mixer}')
+                for p in range(1,p_max):
+                    print(f'\t\tp={p}')
+                    for _ in range(experiments):
+                        print(f'\t\t\texp={_}')
+                        a.run_qaoa(mixer = mixer,
+                                   optimizer = optimizer, 
+                                   p = p,
+                                   GPU = True)
                 # print(a.final_df)
                 # print("time = ", a.final_df.opt_time.mean())
             
