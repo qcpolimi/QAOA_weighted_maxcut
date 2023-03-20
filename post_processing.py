@@ -58,7 +58,7 @@ def group_exp(dir_in,dir_out):
     mixer_list = ['x','r', 'xy']
     n_list_1 = [str(i) for i in range(4,23,2)]
     n_list_other = [str(i) for i in range(4,21,2)]
-    p_list = [str(i) for i in range(1,5)]
+    p_list = [str(i) for i in range(1,2)]
     
     for g in g_list:
         for mixer in mixer_list:

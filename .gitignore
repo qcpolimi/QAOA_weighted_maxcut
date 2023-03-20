@@ -1,3 +1,5 @@
 /exp_cobyla/**
 /exp_powell/**
 /__pycache__/**
+.*
+!/.gitignore
