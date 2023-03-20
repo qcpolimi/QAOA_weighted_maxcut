@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,20,1,POWELL,50.2,17.51697589324266,32.8605,11.339055616663048,0.9055,0.03320391543176798,1

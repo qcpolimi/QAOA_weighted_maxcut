@@ -3,9 +3,9 @@ from qaoa import QAOA
 
 if __name__ == "__main__":
 
-    folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/exp_opt/'
+    folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/exp_powell/'
     
-    for n in range(14,15):#,2): 
+    for n in range(4,23,2): 
         g = 'perimeter'
         
         if g == 'perimeter':
@@ -37,18 +37,18 @@ if __name__ == "__main__":
                     # 'GSLS', 
                     # 'NELDER_MEAD', 
                     # 'NFT', 
-                    # 'POWELL',
+                    'POWELL',
                     # 'SPSA',
-                    'BOBYQA',
-                    'IMFIL',
-                    'CRS',
-                    'DIRECT_L',
-                    'DIRECT_L_RAND',
-                    'ESCH',
-                    'ISRES'
+                    # 'BOBYQA',
+                    # 'IMFIL',
+                    # 'CRS',
+                    # 'DIRECT_L',
+                    # 'DIRECT_L_RAND',
+                    # 'ESCH',
+                    # 'ISRES'
                     ]
         
-        test_mix = ['x']#, 'r', 'xy']
+        test_mix = ['x', 'r', 'xy']
         
         p_max = 2
         experiments = 10

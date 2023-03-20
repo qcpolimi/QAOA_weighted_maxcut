@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,L_BFGS_B,34.2,19.40103090044444,0.3262,0.19025818715045556,0.8230000000000001,0.18417684738074738,3

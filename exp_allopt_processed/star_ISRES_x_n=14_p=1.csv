@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,ISRES,1000.0,0.0,8.4774,1.6502816729273824,0.4138,0.4937855584945532,3

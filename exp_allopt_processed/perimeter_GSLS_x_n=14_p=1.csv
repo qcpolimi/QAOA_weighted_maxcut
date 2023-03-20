@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,GSLS,242.2,84.38246263294288,1.8416000000000001,0.6696249696658572,0.8884000000000001,0.15646028960161815,5

@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,ESCH,1000.0,0.0,9.8255,0.152332421587352,0.9051,0.3001001499499792,9

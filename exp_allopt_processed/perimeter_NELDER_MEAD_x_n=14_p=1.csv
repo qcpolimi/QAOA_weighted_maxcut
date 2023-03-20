@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,NELDER_MEAD,65.6,7.275529763071095,0.4321,0.04926447897713817,0.9538,0.0743890672971058,7

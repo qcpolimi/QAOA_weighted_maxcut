@@ -1,0 +1,2 @@
+,n_qubs,p,opt_name,opt_iterations_mean,opt_iterations_std,opt_time_mean,opt_time_std,approx_ratio_mean,approx_ratio_std,optimal_sol_count
+0,14,1,BOBYQA,700.0,483.045891539648,5.914,4.085301784038318,0.85,0.24152294576982397,7
