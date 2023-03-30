@@ -1,6 +1,6 @@
 # QAOA_weighted_maxcut
 
-This repository is published in support of publication "Benchmarking QAOA for Max-Cut on selected instances
+This repository is published in support of publication "Benchmarking QAOA for Max-Cut on selected instances".
 
 ## Installation
 
