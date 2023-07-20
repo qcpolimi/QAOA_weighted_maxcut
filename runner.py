@@ -3,9 +3,10 @@ from qaoa import QAOA
 
 if __name__ == "__main__":
 
-    folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/exp_powell/'
-    
-    for n in range(4,23,2): 
+    # folder = '/home/rugantio/Downloads/QAOA_weighted_maxcut/table_1/'
+    folder = '/results/'
+
+    for n in range(4, 23, 2):
         g = 'perimeter'
         
         if g == 'perimeter':
@@ -28,46 +29,50 @@ if __name__ == "__main__":
         
         rnd_mu = a.costs.mean() / a.optimum_cost
         test_opt = [
-                    # 'ADAM', 
-                    # 'CG', 
-                    # 'COBYLA', 
-                    # 'L_BFGS_B', 
-                    # 'SLSQP', 
-                    # 'TNC', 
-                    # 'GSLS', 
-                    # 'NELDER_MEAD', 
-                    # 'NFT', 
+                    'ADAM',
+                    'CG',
+                    'COBYLA',
+                    'L_BFGS_B',
+                    'SLSQP',
+                    'TNC',
+                    'GSLS',
+                    'NELDER_MEAD',
+                    'NFT',
                     'POWELL',
-                    # 'SPSA',
-                    # 'BOBYQA',
-                    # 'IMFIL',
-                    # 'CRS',
-                    # 'DIRECT_L',
-                    # 'DIRECT_L_RAND',
-                    # 'ESCH',
-                    # 'ISRES'
+                    'SPSA',
+                    'BOBYQA',
+                    'IMFIL',
+                    'CRS',
+                    'DIRECT_L',
+                    'DIRECT_L_RAND',
+                    'ESCH',
+                    'ISRES'
                     ]
         
         test_mix = ['x', 'r', 'xy']
-        
-        p_max = 2
-        experiments = 10
+
+        p_list = [1, 2]
+        experiments = 100
         
 
         for optimizer in test_opt:
             print(f'optimizer={optimizer}')
             for mixer in test_mix:
                 print(f'\tmixer={mixer}')
-                for p in range(1,p_max):
+                for p in p_list:
                     print(f'\t\tp={p}')
                     for _ in range(experiments):
                         print(f'\t\t\texp={_}')
-                        a.run_qaoa(mixer = mixer,
-                                   optimizer = optimizer, 
-                                   p = p,
-                                   GPU = True)
-                # print(a.final_df)
-                # print("time = ", a.final_df.opt_time.mean())
+                        a.run_qaoa(mixer=mixer,
+                                   optimizer=optimizer,
+                                   p=p,
+                                   GPU=False)
+
+                    # print(a.final_df)
+                    # print("time = ", a.final_df.opt_time.mean())
+
+                    a.save_final_df(folder, g, optimizer, n, p, experiments, mixer)
+                    a.reset_df()
             
 # =============================================================================
 #                 ratio = a.final_df['approx_ratio']
@@ -97,8 +102,7 @@ if __name__ == "__main__":
 #                 plt.clf()
 # =============================================================================
                 
-                a.save_final_df(folder, g, optimizer, n, p, experiments, mixer)
-                a.reset_df()
+
                 
         
             

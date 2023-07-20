@@ -8,6 +8,7 @@ from qiskit import Aer, QuantumCircuit
 from qiskit.algorithms.optimizers import ADAM, CG, COBYLA, L_BFGS_B, SLSQP, TNC, BOBYQA, IMFIL, GSLS, NELDER_MEAD, NFT, POWELL, SPSA, CRS, DIRECT_L, DIRECT_L_RAND, ESCH, ISRES, QNSPSA
 
 from time import time
+import os
 
 
 pd.set_option('display.max_columns', None)
@@ -26,7 +27,9 @@ class QAOA():
             k for k, v in self.states_and_costs.items() if v == self.optimum_cost]
         self.backend = Aer.get_backend('statevector_simulator')
         self.intermediate_df = pd.DataFrame(columns=['mean_cost', 'probs_dict', 'params'])
-        self.final_df = pd.DataFrame(columns = ['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols', 'opt_sol', 'approx_ratio', 'approx_ratios', 'bit_diffs'])
+        self.final_df = pd.DataFrame(columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
+                                                'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                                'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
 
     @staticmethod
@@ -173,13 +176,21 @@ class QAOA():
             return optimizer
 
 
+    def find_quantile_index(self, quantile, cumulative_probabilities):
+        for i, prob in enumerate(cumulative_probabilities):
+            if prob >= quantile:
+                return i
+        # If the quantile is greater than the largest cumulative probability, return the last index in the list
+        return len(cumulative_probabilities) - 1
+
+
     def run_qaoa(self,
-                 mixer = 'xy',
-                 p = 1,
-                 optimizer = 'COBYLA',
-                 seed = None,
-                 initial_params = None,
-                 GPU = True):
+                 mixer='xy',
+                 p=1,
+                 optimizer='COBYLA',
+                 seed=None,
+                 initial_params=None,
+                 GPU=True):
         
         if GPU:
             self.backend.set_options(device='GPU')
@@ -207,28 +218,70 @@ class QAOA():
                 initial_params = np.concatenate((gammas, betas))
 
         start = time()
-        res = opt.minimize(fun = self.evaluate_circuit,
-                           x0 = initial_params,
-                           bounds = bounds)
+        res = opt.minimize(fun=self.evaluate_circuit,
+                           x0=initial_params,
+                           bounds=bounds)
         end = time()
-        opt_time = np.round(end-start,3)
+        opt_time = np.round(end-start, 3)
         
         if self.opt_iterations > 998:
             print(f"[WARNING] OPTIMIZATION TERMINATED DUE TO MAX_ITER: {self.opt_iterations}")
-        
+
+        # get final distribution of states
         final_probs = self.intermediate_df.probs_dict.values[-1]
 
+        # compute the most probable states
+        # states having a probability close to the highest less than atol are also considered as most probable
         max_prob = max(final_probs.values())
-        final_states = [k for k, v in final_probs.items() if np.isclose(v,max_prob,rtol=0,atol=1e-4)]
-        final_costs = [self.states_and_costs[final_state] for final_state in final_states]
+        final_states = [k for k, v in final_probs.items() if np.isclose(v, max_prob, rtol=0, atol=1e-4)]
         bit_diffs = [self.get_hamming_distance_from_optimum(final_state) for final_state in final_states]
-        approx_ratio = np.round(np.array(final_costs).mean() / self.optimum_cost, 3)
-        approx_ratios = [np.round(final_cost / self.optimum_cost, 3) for final_cost in final_costs]
-        
+
+        # compute the costs of the most probable solution and the average of their ratio to the optimal solution
+        final_costs = [self.states_and_costs[final_state] for final_state in final_states]
+        most_prob_sol_ratio = np.round(np.array(final_costs).mean() / self.optimum_cost, 3)
+
+        # compute the weighted average of the costs of the final distribution and the approximation ratio
+        weighted_avg = np.round(
+            np.array([self.states_and_costs[state] * prob for state, prob in final_probs.items()]).sum(), 3)
+        approx_ratio = np.round(weighted_avg / self.optimum_cost, 3)
+
+        # compute 1st quartile, median, 3rd quartile
+
+        # create a dictionary with costs as keys and probabilities as values
+        obtained_costs_list = [self.states_and_costs[state] for state in final_probs.keys()]
+        cost_probs_dict = {cost: 0 for cost in obtained_costs_list}
+        for state, prob in final_probs.items():
+            cost = self.states_and_costs[state]
+            cost_probs_dict[cost] += prob
+
+        sorted_cost_probs = sorted(cost_probs_dict.items(), key=lambda x: x[0])
+
+        # Extract costs and probabilities from sorted_cost_probs
+        costs = [item[0] for item in sorted_cost_probs]
+        probabilities = [item[1] for item in sorted_cost_probs]
+
+        # Calculate the cumulative probabilities
+        cumulative_probabilities = [sum(probabilities[:i + 1]) for i in range(len(probabilities))]
+
+        # Calculate the quartile indices
+        q1_index = self.find_quantile_index(quantile=0.25, cumulative_probabilities=cumulative_probabilities)
+        median_index = self.find_quantile_index(quantile=0.5, cumulative_probabilities=cumulative_probabilities)
+        q3_index = self.find_quantile_index(quantile=0.75, cumulative_probabilities=cumulative_probabilities)
+
+        # Get the quartile values
+        q1 = costs[q1_index]
+        median = costs[median_index]
+        q3 = costs[q3_index]
+
         if not isinstance(optimizer, str):
             optimizer = repr(optimizer).split()[0].split('.')[-1]
-        final_df = pd.DataFrame([[self.n_qubs, self.p, optimizer, self.opt_iterations, opt_time, final_states, self.optimum_states, approx_ratio, approx_ratios, bit_diffs]],
-                                columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols', 'opt_sol', 'approx_ratio', 'approx_ratios', 'bit_diffs'])
+            
+        final_df = pd.DataFrame([[self.n_qubs, self.p, optimizer, self.opt_iterations, opt_time, final_states,
+                                  self.optimum_states, weighted_avg, q1, median, q3,
+                                  approx_ratio, most_prob_sol_ratio, bit_diffs]],
+                                columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
+                                         'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                         'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
         self.final_df = pd.concat([self.final_df, final_df], ignore_index=True)
 
@@ -247,12 +300,17 @@ class QAOA():
 
 
     def save_final_df(self, folder, g, optimizer, n, p, experiments, mixer):
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
         filename = folder + g + '_' + optimizer + '_' + mixer + '_n=' + str(n) + '_p=' + str(p) + '.csv' #'_exp=' + str(experiments) + '.csv'
         self.final_df.to_csv(filename)
     
     
     def reset_df(self):
         self.intermediate_df = pd.DataFrame(columns=['mean_cost', 'probs_dict', 'params'])
-        self.final_df = pd.DataFrame(columns = ['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols', 'opt_sol', 'approx_ratio', 'approx_ratios', 'bit_diffs'])
+        self.final_df = pd.DataFrame(columns = ['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
+                                         'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                         'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
         

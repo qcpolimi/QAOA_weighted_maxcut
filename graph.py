@@ -102,6 +102,7 @@ def get_color_map(color_dict):
             color_map.append("green")
     return color_map
 
+
 # def get_A_matrix(G):
 #     n = G.number_of_nodes()
 #     A = np.zeros([n, n])
@@ -117,7 +118,7 @@ def get_color_map(color_dict):
 
 
 def get_Q_matrix(G):
-    A = nx.to_numpy_matrix(G)
+    A = nx.adjacency_matrix(G)
     n = A.shape[0]
     Q = np.zeros([n, n])
     for i in range(n):
@@ -125,6 +126,6 @@ def get_Q_matrix(G):
         for j in range(n):
             if i != j:
                 Q[i, j] = A[i, j]   
-                x += -A[i,j]
-        Q[i,i] = x
+                x += -A[i, j]
+        Q[i, i] = x
     return Q
