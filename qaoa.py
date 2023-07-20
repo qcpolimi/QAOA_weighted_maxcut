@@ -28,7 +28,7 @@ class QAOA():
         self.backend = Aer.get_backend('statevector_simulator')
         self.intermediate_df = pd.DataFrame(columns=['mean_cost', 'probs_dict', 'params'])
         self.final_df = pd.DataFrame(columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
-                                                'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                                'opt_sol', 'weighted_avg', 'q1', 'q2', 'q3',
                                                 'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
 
@@ -245,7 +245,7 @@ class QAOA():
             np.array([self.states_and_costs[state] * prob for state, prob in final_probs.items()]).sum(), 3)
         approx_ratio = np.round(weighted_avg / self.optimum_cost, 3)
 
-        # compute 1st quartile, median, 3rd quartile
+        # compute 1st quartile, q2, 3rd quartile
 
         # create a dictionary with costs as keys and probabilities as values
         obtained_costs_list = [self.states_and_costs[state] for state in final_probs.keys()]
@@ -265,22 +265,22 @@ class QAOA():
 
         # Calculate the quartile indices
         q1_index = self.find_quantile_index(quantile=0.25, cumulative_probabilities=cumulative_probabilities)
-        median_index = self.find_quantile_index(quantile=0.5, cumulative_probabilities=cumulative_probabilities)
+        q2_index = self.find_quantile_index(quantile=0.5, cumulative_probabilities=cumulative_probabilities)
         q3_index = self.find_quantile_index(quantile=0.75, cumulative_probabilities=cumulative_probabilities)
 
         # Get the quartile values
         q1 = costs[q1_index]
-        median = costs[median_index]
+        q2 = costs[q2_index]
         q3 = costs[q3_index]
 
         if not isinstance(optimizer, str):
             optimizer = repr(optimizer).split()[0].split('.')[-1]
             
         final_df = pd.DataFrame([[self.n_qubs, self.p, optimizer, self.opt_iterations, opt_time, final_states,
-                                  self.optimum_states, weighted_avg, q1, median, q3,
+                                  self.optimum_states, weighted_avg, q1, q2, q3,
                                   approx_ratio, most_prob_sol_ratio, bit_diffs]],
                                 columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
-                                         'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                         'opt_sol', 'weighted_avg', 'q1', 'q2', 'q3',
                                          'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
         self.final_df = pd.concat([self.final_df, final_df], ignore_index=True)
@@ -310,7 +310,7 @@ class QAOA():
     def reset_df(self):
         self.intermediate_df = pd.DataFrame(columns=['mean_cost', 'probs_dict', 'params'])
         self.final_df = pd.DataFrame(columns = ['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
-                                         'opt_sol', 'weighted_avg', 'q1', 'median', 'q3',
+                                         'opt_sol', 'weighted_avg', 'q1', 'q2', 'q3',
                                          'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 
         
