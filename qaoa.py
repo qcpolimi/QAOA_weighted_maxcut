@@ -309,7 +309,7 @@ class QAOA():
     
     def reset_df(self):
         self.intermediate_df = pd.DataFrame(columns=['mean_cost', 'probs_dict', 'params'])
-        self.final_df = pd.DataFrame(columns = ['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
+        self.final_df = pd.DataFrame(columns=['n_qubs', 'p', 'opt_name', 'opt_iterations', 'opt_time', 'final_sols',
                                          'opt_sol', 'weighted_avg', 'q1', 'q2', 'q3',
                                          'approx_ratio', 'most_prob_sol_ratio', 'bit_diffs'])
 

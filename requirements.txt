@@ -5,3 +5,4 @@ networkx
 scikit-quant
 nlopt
 matplotlib
+Jinja2

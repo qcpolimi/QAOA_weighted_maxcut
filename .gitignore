@@ -3,5 +3,8 @@
 /exp_allopt/**
 /exp_cobyla/**
 /exp_powell/**
+/0other
+/venv
+/runner_*
 /__pycache__/**
-.*
+//.*

@@ -43,13 +43,13 @@ def fully_connected(n, w=None, weight_dist='uniform', seed=1):
     return G
 
 
-def cycle(n, w=None, weight_dist='uniform', seed=1):
+def closed_cycle(n, w=None, weight_dist='uniform', seed=1):
     G = nx.cycle_graph(n)
     G = set_weights(G, w, weight_dist, seed)
     return G
 
 
-def perimeter(n, w=None, weight_dist='uniform', seed=1):
+def cycle(n, w=None, weight_dist='uniform', seed=1):
     G = nx.cycle_graph(n)
     G = set_weights(G, w, weight_dist, seed)
     G.remove_edge(0, n-1)
