@@ -44,8 +44,8 @@ def group_table_exp(dir_in, dir_out):
     g_list = ['star', 'cycle']
     mixer_list = ['x']
     n_list = ['14']
-    p_list = ['1']
-    # p_list = ['2']
+    # p_list = ['1']
+    p_list = ['2']
 
     for g in g_list:
         df = pd.DataFrame()
@@ -58,8 +58,8 @@ def group_table_exp(dir_in, dir_out):
                         df_next = pd.read_csv(f)
                         df = pd.concat([df, df_next])
 
-        file_out = f'table1_{g}.csv'
-        # file_out = f'table2_{g}.csv'
+        # file_out = f'table1_{g}.csv'
+        file_out = f'table2_{g}.csv'
         df.to_csv(os.path.join(dir_out, file_out))
 
 
@@ -97,10 +97,8 @@ def get_table_results(dir_in, dir_out, file_in, file_out):
 def group_figure_exp(dir_in, dir_out):
     optimizer = 'POWELL'
     g_list = ['cycle', 'star']
-    # mixer_list = ['x', 'xy']
     mixer_list = ['x', 'r', 'xy']
-    # n_list = [str(i) for i in range(4, 21, 2)]
-    n_list = [str(i) for i in range(4, 19, 2)]
+    n_list = [str(i) for i in range(4, 21, 2)]
     p_list = [str(i) for i in range(1, 4)]
 
     for g in g_list:
@@ -119,24 +117,22 @@ def group_figure_exp(dir_in, dir_out):
                 df.to_csv(os.path.join(dir_out, file_out))
 
 
-
-
 if __name__ == "__main__":
 
     # tables
-    # dir_in = 'results_table_1/'
-    # dir_out = 'results_table_1_avg/'
+    # dir_in = 'results_table_2/'
+    # dir_out = 'results_table_2_avg/'
     # get_mean_from_experiments(dir_in, dir_out)
     #
-    # dir_in = 'results_table_1_avg/'
-    # dir_out = 'results_table_1_avg/'
+    # dir_in = 'results_table_2_avg/'
+    # dir_out = 'results_table_2_avg/'
     # group_table_exp(dir_in, dir_out)
 
     # figures
-    dir_in = 'results_figure_2ab_powell/'
-    dir_out = 'results_figure_2ab_powell_avg/'
+    dir_in = 'results_figures/'
+    dir_out = 'results_figures_avg/'
     get_mean_from_experiments(dir_in, dir_out)
 
-    dir_in = 'results_figure_2ab_powell_avg/'
-    dir_out = 'results_figure_2ab_powell_plot/'
+    dir_in = 'results_figures_avg/'
+    dir_out = 'results_figures_plot/'
     group_figure_exp(dir_in, dir_out)

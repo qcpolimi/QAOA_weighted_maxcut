@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
-folder = 'results_figure_2ab_powell_plot/'
+folder = 'results_figures_plot/'
 
 # cycle
 c_x_p1 = pd.read_csv(folder + "cycle_POWELL_x_p=1.csv", index_col='n_qubs')
@@ -46,7 +47,10 @@ plt.grid()
 plt.legend()
 plt.xlabel("Qubits")
 plt.ylabel("Approx ratio")
-fig.savefig('results_figure_2ab_powell_plot/all_mixer_p=1_graph-mixer_approx_ratio_n.svg', bbox_inches='tight', pad_inches=0)
+
+if not os.path.exists('figures'):
+    os.makedirs('fig2')
+fig.savefig('fig2/all_mixer_p=1_graph-mixer_approx_ratio_n.svg', bbox_inches='tight', pad_inches=0)
 plt.show()
 
 
@@ -81,7 +85,7 @@ plt.grid()
 plt.legend()
 plt.xlabel("Qubits")
 plt.ylabel("Optimization time")
-fig.savefig('results_figure_2ab_powell_plot/all_mixer_p=1_graph-mixer_opt_time_n.svg', bbox_inches='tight', pad_inches=0)
+fig.savefig('fig2/all_mixer_p=1_graph-mixer_opt_time_n.svg', bbox_inches='tight', pad_inches=0)
 plt.show()
 
 
@@ -116,7 +120,7 @@ plt.grid()
 plt.legend()
 plt.xlabel("Qubits")
 plt.ylabel("Sol ratio")
-fig.savefig('results_figure_2ab_powell_plot/all_mixer_p=1_graph-mixer_sol_ratio_n.svg', bbox_inches='tight', pad_inches=0)
+fig.savefig('fig2/all_mixer_p=1_graph-mixer_sol_ratio_n.svg', bbox_inches='tight', pad_inches=0)
 plt.show()
 
 
@@ -137,5 +141,5 @@ plt.grid()
 plt.legend()
 plt.xlabel("Qubits")
 plt.ylabel("Optimal sol")
-fig.savefig('results_figure_2ab_powell_plot/all_mixer_p=1_graph-mixer_sol_count_n.svg', bbox_inches='tight', pad_inches=0)
+fig.savefig('fig2/all_mixer_p=1_graph-mixer_sol_count_n.svg', bbox_inches='tight', pad_inches=0)
 

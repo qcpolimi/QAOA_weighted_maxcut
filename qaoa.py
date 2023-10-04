@@ -183,7 +183,6 @@ class QAOA():
         # If the quantile is greater than the largest cumulative probability, return the last index in the list
         return len(cumulative_probabilities) - 1
 
-
     def run_qaoa(self,
                  mixer='xy',
                  p=1,
@@ -223,7 +222,7 @@ class QAOA():
                            bounds=bounds)
         end = time()
         opt_time = np.round(end-start, 3)
-        
+
         if self.opt_iterations > 998:
             print(f"[WARNING] OPTIMIZATION TERMINATED DUE TO MAX_ITER: {self.opt_iterations}")
 
